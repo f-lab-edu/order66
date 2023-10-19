@@ -9,4 +9,8 @@
         values
             (#{clientId}, #{clientName}, #{clientNickname}, #{clientPassword}, #{clientEmail}, #{clientPhone}, #{clientProfile})
     </insert>
+
+<!--    <select id="getUserById" resultType="com.herryboro.order66.dto">-->
+<!--        SELECT * FROM tb_client WHERE client_id = #{id}>-->
+<!--    </select>-->
 </mapper>

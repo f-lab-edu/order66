@@ -10,13 +10,14 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 public class ClientMemberDTO {
+    private Long id;
 
     @NotBlank(message = "아이디는 필수 입력 사항입니다.")
     @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "아이디는 영문자와 숫자만 가능합니다.")
     private String clientId;
 
     @NotBlank(message = "이름은 필수 입력 사항입니다.")
-    @Pattern(regexp = "^[a-zA-Z가-힣\\s]+$", message = "이름에는 특수 문자를 입력하실 수 없습니다.")
+    @Pattern(regexp = "^[a-zA-Z가-힣\\s]*$", message = "이름에는 문자만 입력 가능합니다.")
     private String clientName;
 
     @NotBlank(message = "닉네임은 필수 입력 사항입니다.")

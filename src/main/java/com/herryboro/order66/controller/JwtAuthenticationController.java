@@ -8,15 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 
 /** Jwt 로그인 controller */
 @RestController
@@ -32,7 +28,6 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok("메인홈입니다.");
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<JwtTokenDto> authenticteUser(@RequestBody ClientMemberDTO loginRequest) {
 
@@ -42,7 +37,7 @@ public class JwtAuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication);
-
+        System.out.println("jwt = " + jwt);
         HttpHeaders httpHeaders = new HttpHeaders();
         // response header에 jwt token에 넣어줌
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);

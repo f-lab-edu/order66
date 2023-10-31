@@ -25,14 +25,14 @@ public class ClientMemberController {
     @GetMapping(value = "/home")
     public ResponseEntity<String> mainHome() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        System.out.println(principal.toString());
         /**
           - spring security 인증을 받지 않은 유저가 접근할 경우 principal값은 String "anonymousUser"가 할당됨
           - logout 하면 역시 anonymousUser가 됨
          */
 
         if (principal instanceof String && "anonymousUser".equals(principal)) {
-            return ResponseEntity.ok("로그아웃되었습니다.");
+            return ResponseEntity.ok("로그아웃 되었습니다.");
         } else if (principal instanceof Long) {
             Long id = (Long) principal;
             ClientMemberDTO userById = clientService.getUserById(id);

@@ -2,7 +2,6 @@ package com.herryboro.order66.mapper;
 
 import com.herryboro.order66.dto.ClientMemberDTO;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
 @Mapper
 public interface ClientMemberMapper {

@@ -24,7 +24,7 @@ public class ClientMemberDTO {
     private String clientNickname;
 
     @NotBlank(message = "비밀번호는 필수 입력 사항입니다.")
-    @Pattern(regexp = "^(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).+$", message = "비밀번호는 8자 이상의 문자, 숫자 및 특수 문자의 조합이어야 합니다.")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$", message = "비밀번호는 8자 이상의 문자 및 특수 문자의 조합이어야 합니다.")
     private String clientPassword;
 
     @NotBlank

@@ -48,6 +48,8 @@ public class TokenProvider implements InitializingBean {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
+        System.out.println("authorities = " + authorities);;
+
         // 토큰의 expire 시간을 설정
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
@@ -85,16 +87,12 @@ public class TokenProvider implements InitializingBean {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-
             logger.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-
             logger.info("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
-
             logger.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-
             logger.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;

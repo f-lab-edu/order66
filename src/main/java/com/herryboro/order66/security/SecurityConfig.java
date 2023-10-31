@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -35,12 +34,12 @@ public class SecurityConfig {
                     .permitAll()
                     .usernameParameter("userId")
                     .passwordParameter("password")
-                    .defaultSuccessUrl("/clientMember/home")
+                    .defaultSuccessUrl("/client/home")
             )
             .logout((logout) ->
                 logout
                     .logoutUrl("/logout")
-                    .logoutSuccessUrl("/clientMember/home")
+                    .logoutSuccessUrl("/client/home")
                     .invalidateHttpSession(true));
         return http.build();
 
@@ -52,7 +51,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((requests) ->
                 requests
-                    .requestMatchers( "/client/signUp", "/client/home", "/jwtApi/login").permitAll()
+                    .requestMatchers( "/jwtApi/login").permitAll()
                     .anyRequest().authenticated() // 위 패턴과 일치하지 않은 패턴은 모두 인증이 필요
             )
             .exceptionHandling(authenticationManager -> {
@@ -64,6 +63,6 @@ public class SecurityConfig {
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
 
-        return http.build(); */
+        return http.build();*/
     }
 }

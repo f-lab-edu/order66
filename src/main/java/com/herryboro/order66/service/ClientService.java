@@ -1,6 +1,7 @@
 package com.herryboro.order66.service;
 
 import com.herryboro.order66.dto.ClientMemberDTO;
+import com.herryboro.order66.dto.UpdateClientInfoDto;
 import com.herryboro.order66.exception.PasswordMismatchException;
 import com.herryboro.order66.exception.ClientRegistrationException;
 import com.herryboro.order66.mapper.ClientMemberMapper;
@@ -43,5 +44,10 @@ public class ClientService {
 
     public PasswordEncoder passwordEncoder() {
         return this.passwordEncoder;
+    }
+
+    public void updateClientInfo(UpdateClientInfoDto user) {
+        user.setClientPassword(passwordEncoder.encode(user.getClientPassword()));
+        clientMemberMapper.updateClientInfo(user);
     }
 }

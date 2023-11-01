@@ -2,6 +2,7 @@ package com.herryboro.order66.controller;
 
 import com.google.gson.Gson;
 import com.herryboro.order66.dto.ClientMemberDTO;
+import com.herryboro.order66.dto.UpdateClientInfoDto;
 import com.herryboro.order66.exception.ClientInputDataException;
 import com.herryboro.order66.exception.ErrorResponse;
 import com.herryboro.order66.exception.PasswordMismatchException;
@@ -22,11 +23,13 @@ public class ClientMemberController {
 
     private final ClientService clientService;
 
+    /**
+     *  main 홈 (security session 로그인 test)
+     */
     @GetMapping(value = "/home")
     public ResponseEntity<String> mainHome() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(principal.toString());
-        /**
+        /*
           - spring security 인증을 받지 않은 유저가 접근할 경우 principal값은 String "anonymousUser"가 할당됨
           - logout 하면 역시 anonymousUser가 됨
          */
@@ -36,13 +39,15 @@ public class ClientMemberController {
         } else if (principal instanceof Long) {
             Long id = (Long) principal;
             ClientMemberDTO userById = clientService.getUserById(id);
-            System.out.println(userById.toString());
             return ResponseEntity.ok("여기는 메인 홈페이지 입니다.");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized request.");
         }
     }
 
+    /**
+     *  client 회원 가입
+     */
     @PostMapping(value = "/signUp")
     public ResponseEntity<String> signUpClientUser(@Valid @ModelAttribute ClientMemberDTO user, BindingResult result) {
 
@@ -54,6 +59,20 @@ public class ClientMemberController {
 
         clientService.signUp(user);
         return ResponseEntity.ok("회원 가입이 완료되었습니다.");
+    }
+
+    /**
+     *  client 유저 정보 수정
+     */
+    @PostMapping(value = "/updateClientInfo")
+    public ResponseEntity<String> updateClientInfo(@Valid @ModelAttribute UpdateClientInfoDto user, BindingResult result) {
+        if (result.hasErrors()) {
+            // 회원가입 시 발생한 예외 메시지 반환
+            String jsonErrorMessages = new Gson().toJson(result.getFieldErrors());
+            throw new ClientInputDataException(jsonErrorMessages);
+        }
+        clientService.updateClientInfo(user);
+        return ResponseEntity.ok("수정되었습니다.");
     }
 
     @ExceptionHandler({ClientInputDataException.class})

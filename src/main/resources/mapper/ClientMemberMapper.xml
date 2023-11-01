@@ -32,4 +32,13 @@
         select * from client where client_id = #{clientId}
     </select>
 
+    <update id="updateClientInfo" parameterType="com.herryboro.order66.dto.UpdateClientInfoDto">
+        update client set
+            client_nickname = #{clientNickname},
+            client_password = #{clientPassword},
+            client_email = #{clientEmail},
+            client_phone = #{clientPhone}
+        where id = #{id}
+    </update>
+
 </mapper>

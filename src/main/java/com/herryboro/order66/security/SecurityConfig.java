@@ -12,14 +12,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final TokenProvider tokenProvider;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    /**
+        jwt 관련 코드
+    */
+//    private final TokenProvider tokenProvider;
+//    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+//    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         /**
-         * ▣ session, spring security
+         * ▣ spring security, session 관련 설정
          */
 
           http
@@ -45,24 +48,24 @@ public class SecurityConfig {
 
 
         /**
-         * jwt, security
-
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests((requests) ->
-                requests
-                    .requestMatchers( "/jwtApi/login").permitAll()
-                    .anyRequest().authenticated() // 위 패턴과 일치하지 않은 패턴은 모두 인증이 필요
-            )
-            .exceptionHandling(authenticationManager -> {
-                authenticationManager
-                    .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-                    .accessDeniedHandler(new JwtAccessDeniedHandler());
-
-            })
-            .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
-
-        return http.build();*/
+         * jwt, security 관련 설정
+         */
+//        http
+//            .csrf(AbstractHttpConfigurer::disable)
+//            .authorizeHttpRequests((requests) ->
+//                requests
+//                    .requestMatchers( "/jwtApi/login").permitAll()
+//                    .anyRequest().authenticated() // 위 패턴과 일치하지 않은 패턴은 모두 인증이 필요
+//            )
+//            .exceptionHandling(authenticationManager -> {
+//                authenticationManager
+//                    .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+//                    .accessDeniedHandler(new JwtAccessDeniedHandler());
+//
+//            })
+//            .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//            .apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
+//
+//        return http.build();
     }
 }

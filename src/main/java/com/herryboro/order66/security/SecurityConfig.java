@@ -21,7 +21,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        /**
+        /*
          * ▣ spring security, session 관련 설정
          */
 
@@ -47,7 +47,7 @@ public class SecurityConfig {
         return http.build();
 
 
-        /**
+        /*
          * jwt, security 관련 설정
          */
 //        http

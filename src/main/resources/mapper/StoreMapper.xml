@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herryboro.order66.mapper.StoreMapper">
+
+    <resultMap id="storeResultMap" type="com.herryboro.order66.dto.StoreInfoDto">
+        <id property="id" column="id"/>
+        <result property="storeId" column="store_id"/>
+        <result property="ownerName" column="owner_name"/>
+        <result property="storePassword" column="store_password"/>
+        <result property="ownerPhone" column="owner_phone"/>
+        <result property="storePhone" column="store_phone"/>
+        <result property="taxId" column="tax_id"/>
+        <result property="storeAddress" column="store_address"/>
+        <result property="storeAddressDetail" column="store_address_detail"/>
+        <result property="storeOpenTime" column="store_open"/>
+        <result property="storeProfile" column="store_profile"/>
+    </resultMap>
+
+    <insert id="insertStoreInfo" >
+        insert into store
+            (store_id, owner_name, store_password, owner_phone, store_name, store_phone, tax_id, store_address, store_address_detail, store_open, store_profile)
+        values
+            (#{storeId}, #{ownerName}, #{storePassword}, #{ownerPhone}, #{storeName}, #{storePhone}, #{taxId},
+            #{storeAddress}, #{storeAddressDetail}, #{storeOpenTime}::json, #{storeProfile})
+    </insert>
+
+    <select id="checkRegistrationMenuGroup">
+        select count(*) from menu_group where store_id = #{storeId}
+    </select>
+
+    <select id="checkRegistrationMenu">
+        select count(*) from menu where menu_group_id = #{menuGroupId}
+    </select>
+
+    <select id="getMaxMenuGroupOrder">
+        select max(menu_group_order) from menu_group where store_id = #{storeId}
+    </select>
+
+    <select id="getMaxMenuOrder">
+        select max(menu_order) from menu where menu_group_id = #{menuGroupId}
+    </select>
+
+    <insert id="registerMenuGroupInfo">
+        insert into menu_group(store_id, group_name, menu_group_order) values(#{storeId}, #{groupName}, #{menuGroupOrder})
+    </insert>
+
+    <insert id="registerMenuInfo">
+        insert into menu(menu_group_id, menu_name, menu_price, menu_order) values(#{menuGroupId}, #{menuName}, #{menuPrice}, #{menuOrder})
+    </insert>
+
+    <select id="getMenuGroupId" resultType="Long">
+        select id as menu_group_id from menu_group where store_id = #{storeId} and group_name = #{groupName};
+    </select>
+
+    <select id="getMenuId" resultType="Long">
+        select id as menu_id from menu where menu_group_id = #{menuGroupId} and menu_name = #{menuName};
+    </select>
+
+    <select id="getStoreById" resultMap="storeResultMap">
+        select * from store where id = #{id}
+    </select>
+
+    <select id="getStoreByStoreId" resultMap="storeResultMap">
+        select * from store where store_id = #{storeId}
+    </select>
+
+</mapper>

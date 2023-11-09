@@ -27,7 +27,7 @@
         select * from client where id = #{id}
     </select>
 
-    <!-- 로그인시 입력한 id로 client 정보 조회 -->
+<!-- 로그인시 입력한 id로 client 정보 조회 -->
     <select id="getUserByClientId" resultMap="clientResultMap">
         select * from client where client_id = #{clientId}
     </select>

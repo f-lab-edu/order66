@@ -3,7 +3,7 @@ package com.herryboro.order66.service;
 import com.herryboro.order66.dto.ClientMemberDTO;
 import com.herryboro.order66.dto.UpdateClientInfoDto;
 import com.herryboro.order66.exception.PasswordMismatchException;
-import com.herryboro.order66.exception.ClientRegistrationException;
+import com.herryboro.order66.exception.RegistrationException;
 import com.herryboro.order66.mapper.ClientMemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,9 +16,8 @@ import org.springframework.stereotype.Service;
 public class ClientService {
 
     private final ClientMemberMapper clientMemberMapper;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void signUp(ClientMemberDTO user) {
+    public void signUp(ClientMemberDTO user, PasswordEncoder passwordEncoder) {
         if (!user.getClientPassword().equals(user.getPasswardCheck())) {
             throw new PasswordMismatchException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
@@ -27,7 +26,7 @@ public class ClientService {
         try {
             clientMemberMapper.insertMember(user);
         } catch (DataIntegrityViolationException e) {
-            throw new ClientRegistrationException(e.getMessage());
+            throw new RegistrationException(e.getMessage());
         }
 
     }
@@ -42,11 +41,8 @@ public class ClientService {
         return clientMemberMapper.getUserByClientId(clientId);
     }
 
-    public PasswordEncoder passwordEncoder() {
-        return this.passwordEncoder;
-    }
 
-    public void updateClientInfo(UpdateClientInfoDto user) {
+    public void updateClientInfo(UpdateClientInfoDto user, PasswordEncoder passwordEncoder) {
         user.setClientPassword(passwordEncoder.encode(user.getClientPassword()));
         clientMemberMapper.updateClientInfo(user);
     }

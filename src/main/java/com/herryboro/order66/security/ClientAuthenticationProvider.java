@@ -3,8 +3,6 @@ package com.herryboro.order66.security;
 import com.herryboro.order66.dto.ClientMemberDTO;
 import com.herryboro.order66.service.ClientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +18,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-//@Order(2)
 public class ClientAuthenticationProvider implements AuthenticationProvider {
 
     private final ClientService clientService;
@@ -28,9 +25,6 @@ public class ClientAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        authentication.getAuthorities().forEach(auth -> {
-            System.out.println(auth);
-        });
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
 

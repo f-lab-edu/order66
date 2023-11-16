@@ -26,61 +26,30 @@ public class ClientSecurityConfig {
     public SecurityFilterChain clientSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-                .securityMatcher("/client/**")
-                .authorizeRequests((requests) -> requests
-                .requestMatchers( "/client/signUp", "/client/login")
+            .securityMatcher("/clients/**")
+            .authorizeRequests((requests) -> requests
+                .requestMatchers( "/clients/signUp", "/clients/login")
                 .permitAll()
-                .requestMatchers("/client/**").hasAnyAuthority("ROLE_CLIENT")
+                .requestMatchers("/clients/**").hasAnyAuthority("ROLE_CLIENT")
                 .anyRequest().authenticated()
             )
             .formLogin((form) ->
                 form
-                    .loginProcessingUrl("/client/login")
+                    .loginProcessingUrl("/clients/login")
                     .permitAll()
                     .usernameParameter("userId")
                     .passwordParameter("password")
-                    .defaultSuccessUrl("/client/home")
+                    .defaultSuccessUrl("/clients/home")
             )
             .logout((logout) ->
                 logout
-                    .logoutUrl("/client/logout")
-                    .logoutSuccessUrl("/client/login")
+                    .logoutUrl("/clients/logout")
+                    .logoutSuccessUrl("/clients/login")
                     .invalidateHttpSession(true))
             .authenticationProvider(clientAuthenticationProvider);
 
         return http.build();
     }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        /*
-//         * ▣ spring security, session 관련 설정
-//         */
-//
-//          http
-//            .csrf(AbstractHttpConfigurer::disable)
-//            .authorizeHttpRequests((requests) -> requests
-//                .requestMatchers("/client/**").hasAnyAuthority("ROLE_CLIENT")
-//                .requestMatchers("/store/**").hasAnyAuthority("ROLE_STORE")
-//                .requestMatchers( "/client/signUp", "/store/signUp")
-//                .permitAll()
-//                .anyRequest().authenticated() // 위 패턴과 일치하지 않은 패턴은 모두 인증이 필요
-//            )
-//            .formLogin((form) ->
-//                form
-//                    .loginProcessingUrl("/auth")
-//                    .permitAll()
-//                    .usernameParameter("userId")
-//                    .passwordParameter("password")
-//                    .defaultSuccessUrl("/client/home")
-//            )
-//            .logout((logout) ->
-//                logout
-//                    .logoutUrl("/logout")
-//                    .logoutSuccessUrl("/client/home")
-//                    .invalidateHttpSession(true));
-//        return http.build();
-
 
         /*
          * jwt, security 관련 설정

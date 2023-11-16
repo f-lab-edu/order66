@@ -1,6 +1,6 @@
 package com.herryboro.order66.security;
 
-import com.herryboro.order66.dto.ClientMemberDTO;
+import com.herryboro.order66.dto.ClientInfoDTO;
 import com.herryboro.order66.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -28,7 +28,7 @@ public class ClientAuthenticationProvider implements AuthenticationProvider {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        ClientMemberDTO client = clientService.getUserByClientId(username);
+        ClientInfoDTO client = clientService.getUserByClientId(username);
         if (client != null && passwordEncoder.matches(password, client.getClientPassword())) {
             List<GrantedAuthority> roles =  new ArrayList<>();
             roles.add(new SimpleGrantedAuthority("ROLE_CLIENT"));

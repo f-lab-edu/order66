@@ -27,7 +27,7 @@
 //        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 //        String jwt = resolveToken(httpServletRequest);
 //        String requestURI = httpServletRequest.getRequestURI();
-//        logger.info("==========");
+//
 //        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 //            Authentication authentication = tokenProvider.getAuthentication(jwt);
 //            SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -35,7 +35,6 @@
 //        } else {
 //            logger.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
 //        }
-//        logger.info("==========");
 //        filterChain.doFilter(servletRequest, servletResponse);
 //    }
 //

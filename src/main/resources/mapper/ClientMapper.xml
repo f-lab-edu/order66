@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.herryboro.order66.mapper.ClientMemberMapper">
+<mapper namespace="com.herryboro.order66.mapper.ClientMapper">
 
-    <resultMap id="clientResultMap" type="com.herryboro.order66.dto.ClientMemberDTO">
+    <resultMap id="clientResultMap" type="com.herryboro.order66.dto.ClientInfoDTO">
         <id property="id" column="id"/>
         <result property="clientId" column="client_id"/>
         <result property="clientName" column="client_name"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 회원가입 -->
-    <insert id="insertMember">
+    <insert id="insertMember" parameterType="com.herryboro.order66.dto.ClientInfoDTO" >
         insert into client
             (client_id, client_name, client_nickname, client_password, client_email, client_phone, client_profile)
         values

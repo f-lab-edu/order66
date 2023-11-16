@@ -1,6 +1,6 @@
 //package com.herryboro.order66.controller;
 //
-//import com.herryboro.order66.dto.ClientMemberDTO;
+//import com.herryboro.order66.dto.ClientInfoDTO;
 //import com.herryboro.order66.dto.JwtTokenDto;
 //import com.herryboro.order66.security.JwtFilter;
 //import com.herryboro.order66.security.TokenProvider;
@@ -29,7 +29,7 @@
 //    }
 //
 //    @PostMapping("/login")
-//    public ResponseEntity<JwtTokenDto> authenticteUser(@RequestBody ClientMemberDTO loginRequest) {
+//    public ResponseEntity<JwtTokenDto> authenticteUser(@RequestBody ClientInfoDTO loginRequest) {
 //
 //        Authentication authentication = managerBuilder.getObject().authenticate(
 //                new UsernamePasswordAuthenticationToken(loginRequest.getClientId(), loginRequest.getClientPassword())
@@ -37,7 +37,7 @@
 //
 //        SecurityContextHolder.getContext().setAuthentication(authentication);
 //        String jwt = tokenProvider.createToken(authentication);
-//        System.out.println("jwt = " + jwt);
+//
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        // response header에 jwt token에 넣어줌
 //        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);

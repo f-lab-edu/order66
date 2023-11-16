@@ -5,8 +5,8 @@ import com.herryboro.order66.dto.MenuDto;
 import com.herryboro.order66.dto.Option;
 import com.herryboro.order66.dto.OptionsWrapper;
 import com.herryboro.order66.dto.StoreInfoDto;
-import com.herryboro.order66.exception.PasswordMismatchException;
-import com.herryboro.order66.exception.RegistrationException;
+import com.herryboro.order66.exception.DuplicateRegistrationException;
+import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,14 +24,14 @@ public class StoreService {
 
     public void signUp(StoreInfoDto storeInfoDto ,PasswordEncoder passwordEncoder) {
         if (!storeInfoDto.getStorePassword().equals(storeInfoDto.getStorePasswordCheck())) {
-            throw new PasswordMismatchException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            throw new InvalidInputException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
         storeInfoDto.setStorePassword(passwordEncoder.encode(storeInfoDto.getStorePassword()));
 
         try {
             storeMapper.insertStoreInfo(storeInfoDto);
         } catch (DataIntegrityViolationException e) {
-            throw new RegistrationException(e.getMessage());
+            throw new DuplicateRegistrationException(e.getMessage());
         }
 
     }

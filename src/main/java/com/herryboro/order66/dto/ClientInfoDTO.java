@@ -9,7 +9,7 @@ import lombok.ToString;
 
 
 @Getter @Setter @ToString
-public class ClientMemberDTO {
+public class ClientInfoDTO {
     private Long id;
 
     @NotBlank(message = "아이디는 필수 입력 사항입니다.")

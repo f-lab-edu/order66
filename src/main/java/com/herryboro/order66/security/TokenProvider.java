@@ -48,7 +48,6 @@
 //                .map(GrantedAuthority::getAuthority)
 //                .collect(Collectors.joining(","));
 //
-//        System.out.println("authorities = " + authorities);;
 //
 //        // 토큰의 expire 시간을 설정
 //        long now = (new Date()).getTime();
@@ -97,5 +96,4 @@
 //        }
 //        return false;
 //    }
-//
 //}

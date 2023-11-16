@@ -13,6 +13,10 @@ import lombok.ToString;
 public class UpdateClientInfoDto {
     private Long id;
 
+    @NotBlank(message = "이름은 필수 입력 사항입니다.")
+    @Pattern(regexp = "^[a-zA-Z가-힣\\s]*$", message = "이름에는 문자만 입력 가능합니다.")
+    private String clientName;
+
     @NotBlank(message = "닉네임은 필수 입력 사항입니다.")
     private String clientNickname;
 

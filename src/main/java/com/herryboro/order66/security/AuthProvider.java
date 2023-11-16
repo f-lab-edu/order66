@@ -1,11 +1,8 @@
 //package com.herryboro.order66.security;
 //
-//import com.herryboro.order66.dto.ClientMemberDTO;
-//import com.herryboro.order66.dto.StoreInfoDto;
+//import com.herryboro.order66.dto.ClientInfoDTO;
 //import com.herryboro.order66.service.ClientService;
-//import com.herryboro.order66.service.StoreService;
 //import lombok.RequiredArgsConstructor;
-//import org.springframework.context.annotation.Bean;
 //import org.springframework.security.authentication.AuthenticationProvider;
 //import org.springframework.security.authentication.BadCredentialsException;
 //import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,50 +21,30 @@
 //public class AuthProvider implements AuthenticationProvider {
 //
 //    private final ClientService clientService;
-//    private final StoreService storeService;
 //    private final PasswordEncoder passwordEncoder;
 //
 //    @Override
 //    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 //        String id = (String) authentication.getPrincipal();
+//        ClientInfoDTO user = clientService.getUserByClientId(id);
+//        UsernamePasswordAuthenticationToken token;
+//
+//        if (user == null) {
+//            throw new BadCredentialsException("계정이 존재하지 않습니다.");
+//        }
+//
 //        String password = (String) authentication.getCredentials();
-//        String errorMsseage;
 //
-////        PasswordEncoder passwordEncoder = clientService.passwordEncoder();
-////        UsernamePasswordAuthenticationToken token;
-//
-//        // client 권한 저장
-//        ClientMemberDTO userDto = clientService.getUserByClientId(id);
-//
-//        if (userDto != null && passwordEncoder.matches(password, userDto.getClientPassword())) { // 일치하는 user 정보가 있는지 확인
+//        if (!passwordEncoder.matches(password, user.getClientPassword())) {
+//            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+//        } else {
 //            List<GrantedAuthority> roles = new ArrayList<>();
 //            roles.add(new SimpleGrantedAuthority("ROLE_CLIENT")); // 권한 부여
 //
 //            // 인증된 user 정보를 담아 SecurityContextHolder에 저장되는 token
-//            token = new UsernamePasswordAuthenticationToken(userDto.getId(), null, roles);
+//            token = new UsernamePasswordAuthenticationToken(user.getId(), null, roles);
 //            return token;
 //        }
-//        else if(userDto == null) errorMsseage = "계정이 존재하지 않습니다.";
-//        else errorMsseage = "비밀번호가 일치하지 않습니다.";
-//
-//        // store 권한 저장
-//        StoreInfoDto storeDto = storeService.getStoreByStoreId(id);
-//        if (storeDto != null && passwordEncoder.matches(password, storeDto.getStorePassword())) {
-//            List<GrantedAuthority> roles = new ArrayList<>();
-//            roles.add(new SimpleGrantedAuthority("ROLE_STORE"));
-//
-//            // 인증된 user 정보를 담아 SecurityContextHolder에 저장되는 token
-//            token = new UsernamePasswordAuthenticationToken(storeDto.getId(), null, roles);
-//            return token;
-//        }
-//
-//
-//        throw new BadCredentialsException(errorMsseage);
-//    }
-//
-//    @Bean
-//    public AuthenticationProvider clientAuthenticationProvider() {
-//        // Client-specific authentication logic
 //    }
 //
 //    @Override

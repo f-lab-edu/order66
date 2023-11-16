@@ -1,12 +1,11 @@
 package com.herryboro.order66.controller;
 
-import com.google.gson.Gson;
 import com.herryboro.order66.dto.MenuDto;
 import com.herryboro.order66.dto.StoreInfoDto;
 import com.herryboro.order66.exception.ErrorResponse;
-import com.herryboro.order66.exception.InputDataException;
-import com.herryboro.order66.exception.PasswordMismatchException;
-import com.herryboro.order66.exception.RegistrationException;
+import com.herryboro.order66.exception.DuplicateRegistrationException;
+import com.herryboro.order66.exception.exceptionutil.ErrorUtils;
+import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,14 +48,12 @@ public class StoreController {
      * store 정보 등록
      */
     @PostMapping(value = "/signUp")
-    public ResponseEntity<String> signUpStoreInfo(@Valid @ModelAttribute StoreInfoDto user, BindingResult result) {
+    public ResponseEntity<String> signUpStoreInfo(@Valid @ModelAttribute StoreInfoDto storeInfo, BindingResult result) {
 
         if (result.hasErrors()) {
-            // 회원가입 시 발생한 예외 메시지 반환
-            String jsonErrorMessages = new Gson().toJson(result.getFieldErrors());
-            throw new InputDataException(jsonErrorMessages);
+            ErrorUtils.checkBindingResult(result);
         }
-        storeService.signUp(user,passwordEncoder);
+        storeService.signUp(storeInfo, passwordEncoder);
 
         return ResponseEntity.ok("회원 가입이 완료되었습니다.");
     }
@@ -68,19 +65,13 @@ public class StoreController {
 
     }
 
-    @ExceptionHandler(InputDataException.class)
-    public ResponseEntity<String> handleInputDataCheck(InputDataException e) {
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<String> handleInputDataCheck(InvalidInputException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler({PasswordMismatchException.class})
-    public ResponseEntity<ErrorResponse> handlePasswordMismatch(PasswordMismatchException e) {
-        ErrorResponse errorResponse = new ErrorResponse("비밀 번호 불일치", e.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
-
-    @ExceptionHandler(RegistrationException.class)
-    public ResponseEntity<ErrorResponse> handlerUserRegistration(RegistrationException e) {
+    @ExceptionHandler(DuplicateRegistrationException.class)
+    public ResponseEntity<ErrorResponse> handlerUserRegistration(DuplicateRegistrationException e) {
         ErrorResponse errorResponse = new ErrorResponse("store 정보 등록 에러(이미 등록되어 있는 data { 아이디,휴대폰 번호, 가게 전화번호, 사업자등록번호 등 })", e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }

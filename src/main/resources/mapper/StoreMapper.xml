@@ -17,7 +17,19 @@
         <result property="storeProfile" column="store_profile"/>
     </resultMap>
 
-    <insert id="insertStoreInfo" >
+<!--    <resultMap id="MenuResultMap" type="com.herryboro.order66.dto.MenuDto">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="storeId" column="store_id"/>-->
+<!--        <result property="menuGroupId" column="client_name"/>-->
+<!--        <result property="clientNickname" column="client_nickname"/>-->
+<!--        <result property="clientPassword" column="client_password"/>-->
+<!--        <result property="clientEmail" column="client_email"/>-->
+<!--        <result property="clientPhone" column="client_phone"/>-->
+<!--        <result property="clientProfile" column="client_profile"/>-->
+<!--    </resultMap>-->
+
+    <!-- 점포 회원 등록 -->
+    <insert id="insertStoreInfo">
         insert into store
             (store_id, owner_name, store_password, owner_phone, store_name, store_phone, tax_id, store_address, store_address_detail, store_open, store_profile)
         values
@@ -25,44 +37,118 @@
             #{storeAddress}, #{storeAddressDetail}, #{storeOpenTime}::json, #{storeProfile})
     </insert>
 
-    <select id="checkRegistrationMenuGroup">
-        select count(*) from menu_group where store_id = #{storeId}
+    <select id="checkSameMenuGroup" resultType="boolean">
+        select exists(
+            select group_name from menu_group where store_id=#{storeId} and group_name=#{groupName}
+        )
     </select>
 
-    <select id="checkRegistrationMenu">
-        select count(*) from menu where menu_group_id = #{menuGroupId}
+    <select id="confirmInitialMenuGroupRegistration" resultType="boolean">
+        select exists (
+            select store_id from menu_group where store_id=#{storeId}
+        )
+    </select>
+
+    <select id="confirmInitialMenuRegistration" resultType="boolean">
+        select exists (
+            select menu_group_id from menu where menu_group_id=#{menuGroupId}
+        )
     </select>
 
     <select id="getMaxMenuGroupOrder">
-        select max(menu_group_order) from menu_group where store_id = #{storeId}
+        select max(menu_group_order) from menu_group where store_id=#{storeId}
     </select>
 
     <select id="getMaxMenuOrder">
-        select max(menu_order) from menu where menu_group_id = #{menuGroupId}
+        select max(menu_order) from menu where menu_group_id=#{menuGroupId}
     </select>
 
-    <insert id="registerMenuGroupInfo">
-        insert into menu_group(store_id, group_name, menu_group_order) values(#{storeId}, #{groupName}, #{menuGroupOrder})
-    </insert>
+    <select id="registerMenuGroupInfo" parameterType="MenuGroupDto" resultType="Long">
+        insert into menu_group(store_id, group_name, menu_group_order) values(#{storeId}, #{groupName}, #{menuGroupOrder}) returning id
+    </select>
 
-    <insert id="registerMenuInfo">
-        insert into menu(menu_group_id, menu_name, menu_price, menu_order) values(#{menuGroupId}, #{menuName}, #{menuPrice}, #{menuOrder})
-    </insert>
-
-    <select id="getMenuGroupId" resultType="Long">
-        select id as menu_group_id from menu_group where store_id = #{storeId} and group_name = #{groupName};
+    <select id="registerMenuInfo" parameterType="MenuDto" resultType="Long">
+        insert into menu(menu_group_id, menu_name, menu_price, menu_photo, menu_order) values(#{menuGroupId}, #{menuName}, #{menuPrice}, #{menuPhoto}, #{menuOrder})
+        returning id
     </select>
 
     <select id="getMenuId" resultType="Long">
-        select id as menu_id from menu where menu_group_id = #{menuGroupId} and menu_name = #{menuName};
+        select id as menu_id from menu where menu_group_id=#{menuGroupId} and menu_name=#{menuName};
     </select>
 
     <select id="getStoreById" resultMap="storeResultMap">
-        select * from store where id = #{id}
+        select * from store where id=#{id}
     </select>
 
     <select id="getStoreByStoreId" resultMap="storeResultMap">
-        select * from store where store_id = #{storeId}
+        select * from store where store_id=#{storeId}
     </select>
 
+    <insert id="registerMenuGroup" parameterType="String">
+        insert into menu_group(store_id, group_name, menu_group_order)
+    </insert>
+
+    <insert id="registerMenuOptions">
+        insert into menu_option(menu_id, option_name, option_price)
+        values
+        <foreach collection="options" item="option" separator=",">
+            (#{menuId}, #{option.optionName}, #{option.price})
+        </foreach>
+    </insert>
+
+    <update id="updateMenu" parameterType="MenuDto">
+        update menu set menu_name=#{menuName}, menu_price=#{menuPrice}, menu_photo=#{menuPhoto} where id=#{id}
+    </update>
+
+    <update id="updateMenuOptions" parameterType="List">
+        <foreach collection="updateOptionData" item="option" separator=";">
+            update menu_option set option_name=#{option.optionName}, option_price=#{option.price} where id=#{option.id}
+        </foreach>
+    </update>
+
+    <update id="updateMenuGroupInfo" parameterType="List">
+        <foreach collection="menuGroups" item="menuGroup" separator=";">
+            update menu_group set group_name=#{menuGroup.groupName} where id=#{menuGroup.id}
+        </foreach>
+    </update>
+
+    <select id="deleteMenuOption" parameterType="Long" resultType="String">
+        delete from menu_option where id=#{id} returning option_name;
+    </select>
+
+    <select id="checkHaveMenuOption" parameterType="Long" resultType="boolean">
+        select exists (
+            select id from menu_option where menu_id=#{id}
+        )
+    </select>
+
+    <delete id="deleteAllMenuOptionUnderMenu" parameterType="Long">
+        delete from menu_option where menu_id = #{id}
+    </delete>
+
+    <select id="deleteMenu" parameterType="Long" resultType="String">
+        delete from menu where id=#{id} returning menu_name
+    </select>
+
+    <select id="checkExistSubMenu" parameterType="Long" resultType="boolean">
+        select exists (
+            select id from menu where menu_group_id = #{id}
+        )
+    </select>
+
+    <select id="deleteMenuGroup" parameterType="Long" resultType="String">
+        delete from menu_group where id=#{id} returning group_name
+    </select>
+
+    <update id="updateMenuGroupOrder" parameterType="List">
+        <foreach collection="orderInfo" item="order" separator=";">
+            update menu_group set menu_group_order=#{order.menuGroupOrder} where id=#{order.id}
+        </foreach>
+    </update>
+
+    <update id="updateMenuOrder" parameterType="List">
+        <foreach collection="menus" item="menu" separator=";">
+            update menu set menu_order=#{menu.menuOrder} where id=#{menu.id}
+        </foreach>
+    </update>
 </mapper>

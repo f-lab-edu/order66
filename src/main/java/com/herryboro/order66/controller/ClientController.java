@@ -62,7 +62,7 @@ public class ClientController {
     /**
      *  client 유저 정보 수정
      */
-    @PatchMapping(value = "/updateClientInfo")
+    @PutMapping(value = "/updateClientInfo")
     public ResponseEntity<String> updateClientInfo(@Valid @ModelAttribute UpdateClientInfoDto user, BindingResult result) {
         if (result.hasErrors()) {
             ErrorUtils.checkBindingResult(result);

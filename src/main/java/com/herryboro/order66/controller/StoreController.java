@@ -129,11 +129,6 @@ public class StoreController {
         return ResponseEntity.ok("메뉴 그룹 " + menuGroupName + "가 삭제되었습니다.");
     }
 
-    @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<String> handleInputDataCheck(InvalidInputException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
     @ExceptionHandler(DuplicateRegistrationException.class)
     public ResponseEntity<ErrorResponse> handlerUserRegistration(DuplicateRegistrationException e) {
         ErrorResponse errorResponse = new ErrorResponse("store 정보 등록 에러(이미 등록되어 있는 data { 아이디,휴대폰 번호, 가게 전화번호, 사업자등록번호 등 })", e.getMessage());

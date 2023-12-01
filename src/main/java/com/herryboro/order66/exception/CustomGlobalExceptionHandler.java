@@ -24,4 +24,9 @@ public class CustomGlobalExceptionHandler {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<String> handleInputDataCheck(InvalidInputException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

@@ -71,11 +71,6 @@ public class ClientController {
         return ResponseEntity.ok("수정되었습니다.");
     }
 
-    @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<String> handleInputDataCheck(InvalidInputException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
     @ExceptionHandler(DuplicateRegistrationException.class)
     public ResponseEntity<ErrorResponse> handleUserRegistration(DuplicateRegistrationException e) {
         ErrorResponse errorResponse = new ErrorResponse("유저 등록 에러(이미 등록되어 있는 data { 아이디, 닉네임, 휴대폰 번호 등 })", e.getMessage());

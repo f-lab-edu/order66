@@ -7,27 +7,22 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-
-@Getter @Setter @ToString
-public class ClientMemberDTO {
-
-    @NotBlank(message = "아이디는 필수 입력 사항입니다.")
-    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "아이디는 영문자와 숫자만 가능합니다.")
-    private String clientId;
+@Getter
+@Setter
+@ToString
+public class UpdateClientInfoDto {
+    private Long id;
 
     @NotBlank(message = "이름은 필수 입력 사항입니다.")
-    @Pattern(regexp = "^[a-zA-Z가-힣\\s]+$", message = "이름에는 특수 문자를 입력하실 수 없습니다.")
+    @Pattern(regexp = "^[a-zA-Z가-힣\\s]*$", message = "이름에는 문자만 입력 가능합니다.")
     private String clientName;
 
     @NotBlank(message = "닉네임은 필수 입력 사항입니다.")
     private String clientNickname;
 
     @NotBlank(message = "비밀번호는 필수 입력 사항입니다.")
-    @Pattern(regexp = "^(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).+$", message = "비밀번호는 8자 이상의 문자, 숫자 및 특수 문자의 조합이어야 합니다.")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$", message = "비밀번호는 8자 이상의 문자 및 특수 문자의 조합이어야 합니다.")
     private String clientPassword;
-
-    @NotBlank
-    private String passwardCheck;
 
     @Email(message = "유효한 이메일 형식이 아닙니다.")
     private String clientEmail;

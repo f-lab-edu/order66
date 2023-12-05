@@ -1,6 +1,6 @@
 //package com.herryboro.order66.security;
 //
-//import com.herryboro.order66.dto.ClientMemberDTO;
+//import com.herryboro.order66.dto.ClientInfoDTO;
 //import com.herryboro.order66.service.ClientService;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.security.authentication.AuthenticationProvider;
@@ -21,31 +21,34 @@
 //public class AuthProvider implements AuthenticationProvider {
 //
 //    private final ClientService clientService;
+//    private final PasswordEncoder passwordEncoder;
 //
 //    @Override
 //    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 //        String id = (String) authentication.getPrincipal();
-//        String password = (String) authentication.getCredentials();
-//
-////        PasswordEncoder passwordEncoder = clientService.passwordEncoder();
+//        ClientInfoDTO user = clientService.getUserByClientId(id);
 //        UsernamePasswordAuthenticationToken token;
-//        ClientMemberDTO userDto = clientService.getUserById(id);
 //
-//        if (userDto != null && passwordEncoder.matches(password, userDto.getClientPassword())) { // 일치하는 user 정보가 있는지 확인
-//            List<GrantedAuthority> roles = new ArrayList<>();
-//            roles.add(new SimpleGrantedAuthority("USER")); // 권한 부여
-//
-//            // 인증된 user 정보를 담아 SecurityContextHolder에 저장되는 token
-//            token = new UsernamePasswordAuthenticationToken(userDto.getClientId(), null, roles);
-//
-//            return token;
+//        if (user == null) {
+//            throw new BadCredentialsException("계정이 존재하지 않습니다.");
 //        }
 //
-//        throw new BadCredentialsException("No such user or wrong password.");
+//        String password = (String) authentication.getCredentials();
+//
+//        if (!passwordEncoder.matches(password, user.getClientPassword())) {
+//            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+//        } else {
+//            List<GrantedAuthority> roles = new ArrayList<>();
+//            roles.add(new SimpleGrantedAuthority("ROLE_CLIENT")); // 권한 부여
+//
+//            // 인증된 user 정보를 담아 SecurityContextHolder에 저장되는 token
+//            token = new UsernamePasswordAuthenticationToken(user.getId(), null, roles);
+//            return token;
+//        }
 //    }
 //
 //    @Override
 //    public boolean supports(Class<?> authentication) {
-//        return false;
+//        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 //    }
 //}

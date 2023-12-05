@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herryboro.order66.mapper.ClientMapper">
+
+    <resultMap id="clientResultMap" type="com.herryboro.order66.dto.ClientInfoDTO">
+        <id property="id" column="id"/>
+        <result property="clientId" column="client_id"/>
+        <result property="clientName" column="client_name"/>
+        <result property="clientNickname" column="client_nickname"/>
+        <result property="clientPassword" column="client_password"/>
+        <result property="clientEmail" column="client_email"/>
+        <result property="clientPhone" column="client_phone"/>
+        <result property="clientProfile" column="client_profile"/>
+    </resultMap>
+
+    <!-- 회원가입 -->
+    <insert id="insertMember" parameterType="com.herryboro.order66.dto.ClientInfoDTO" >
+        insert into client
+            (client_id, client_name, client_nickname, client_password, client_email, client_phone, client_profile)
+        values
+            (#{clientId}, #{clientName}, #{clientNickname}, #{clientPassword}, #{clientEmail}, #{clientPhone}, #{clientProfile})
+    </insert>
+
+    <!-- id로 client 정보 조회 -->
+    <select id="getUserById" resultMap="clientResultMap">
+        select * from client where id = #{id}
+    </select>
+
+<!-- 로그인시 입력한 id로 client 정보 조회 -->
+    <select id="getUserByClientId" resultMap="clientResultMap">
+        select * from client where client_id = #{clientId}
+    </select>
+
+    <update id="updateClientInfo" parameterType="com.herryboro.order66.dto.UpdateClientInfoDto">
+        update client set
+            client_nickname = #{clientNickname},
+            client_password = #{clientPassword},
+            client_email = #{clientEmail},
+            client_phone = #{clientPhone}
+        where id = #{id}
+    </update>
+
+</mapper>

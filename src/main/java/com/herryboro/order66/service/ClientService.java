@@ -1,48 +1,47 @@
 package com.herryboro.order66.service;
 
-import com.herryboro.order66.dto.ClientMemberDTO;
-import com.herryboro.order66.exception.PasswordMismatchException;
-import com.herryboro.order66.mapper.ClientMemberMapper;
+import com.herryboro.order66.dto.ClientInfoDTO;
+import com.herryboro.order66.dto.UpdateClientInfoDto;
+import com.herryboro.order66.exception.DuplicateRegistrationException;
+import com.herryboro.order66.exception.InvalidInputException;
+import com.herryboro.order66.mapper.ClientMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ClientService {
-    private final ClientMemberMapper clientMemberMapper;
-//    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final ClientMapper clientMapper;
 
-    public void signUp(ClientMemberDTO user) {
-        if (!user.getClientPassword().equals(user.getPasswardCheck())) {
-            throw new PasswordMismatchException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+    public void signUp(ClientInfoDTO clientInfo, PasswordEncoder passwordEncoder) {
+        if (!clientInfo.getClientPassword().equals(clientInfo.getPasswardCheck())) {
+            throw new InvalidInputException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
-//        user.setClientPassword(passwordEncoder.encode(user.getClientPassword()));
-        clientMemberMapper.insertMember(user);
+        clientInfo.setClientPassword(passwordEncoder.encode(clientInfo.getClientPassword()));
+
+        try {
+            clientMapper.insertMember(clientInfo);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateRegistrationException(e.getMessage());
+        }
     }
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        ClientMemberDTO user = Optional
-//            .ofNullable(clientMemberMapper.findByUsername(username))
-//            .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-//
-//        return new User(user.getClientId(), user.getClientPassword(), new ArrayList<>());
-//    }
+    // id로 user 정보 조회
+    public ClientInfoDTO getUserById(Long id) {
+        return clientMapper.getUserById(id);
+    }
 
-//    public ClientMemberDTO getUserById(String id) {
-//        return clientMemberMapper.getUserById(id);
-//    }
+    // clientId로 user 정보 조회
+    public ClientInfoDTO getUserByClientId(String clientId) {
+        return clientMapper.getUserByClientId(clientId);
+    }
 
-//    public PasswordEncoder passwordEncoder() {
-//        return this.passwordEncoder;
-//    }
+    public void updateClientInfo(UpdateClientInfoDto clientInfo, PasswordEncoder passwordEncoder) {
+        clientInfo.setClientPassword(passwordEncoder.encode(clientInfo.getClientPassword()));
+        clientMapper.updateClientInfo(clientInfo);
+    }
 }

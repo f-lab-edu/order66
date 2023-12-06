@@ -1,10 +1,12 @@
 package com.herryboro.order66.controller;
 
-import com.herryboro.order66.dto.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.herryboro.order66.dto.MenuDto;
+import com.herryboro.order66.dto.MenuGroupDto;
+import com.herryboro.order66.dto.Option;
+import com.herryboro.order66.dto.StoreInfoDto;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.ErrorResponse;
-import com.herryboro.order66.exception.InvalidInputException;
-import com.herryboro.order66.exception.exceptionutil.ErrorUtils;
 import com.herryboro.order66.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/store")
 @RequiredArgsConstructor
+@Validated
 public class StoreController {
 
     public final StoreService storeService;
@@ -48,11 +51,7 @@ public class StoreController {
      * store 정보 등록
      */
     @PostMapping(value = "/signUp")
-    public ResponseEntity<String> signUpStoreInfo(@Valid @ModelAttribute StoreInfoDto storeInfo, BindingResult result) {
-        if (result.hasErrors()) {
-            ErrorUtils.checkBindingResult(result);
-        }
-
+    public ResponseEntity<String> signUpStoreInfo(@Valid @ModelAttribute StoreInfoDto storeInfo) {
         storeService.signUp(storeInfo, passwordEncoder);
         return ResponseEntity.ok("회원 가입이 완료되었습니다.");
     }
@@ -81,18 +80,14 @@ public class StoreController {
 
     // 메뉴 그룹 정보 수정
     @PutMapping(value = "/updateMenuGroup")
-    public ResponseEntity<String> updateMenuGroup(@Valid @RequestBody MenuGroupList menuGrouplist) {
-        storeService.updateMenuGroupInfo(menuGrouplist.menuGroups);
+    public ResponseEntity<String> updateMenuGroup(@RequestBody List<@Valid MenuGroupDto> menuGrouplist) {
+        storeService.updateMenuGroupInfo(menuGrouplist);
         return ResponseEntity.ok("메뉴 그룹 정보가 수정되었습니다");
     }
 
     // 메뉴 정보 수정
     @PutMapping(value = "/updateMenu")
-    public ResponseEntity<String> updateMenu(@Valid @ModelAttribute MenuDto menuDto, BindingResult result) {
-        if (result.hasErrors()) {
-            ErrorUtils.checkBindingResult(result);
-        }
-
+    public ResponseEntity<String> updateMenu(@Valid @ModelAttribute MenuDto menuDto) {
         storeService.updateMenu(menuDto);
         return ResponseEntity.ok("메뉴 정보 수정되었습니다.");
     }

@@ -1,11 +1,14 @@
 package com.herryboro.order66.service;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.herryboro.order66.dto.MenuDto;
 import com.herryboro.order66.dto.MenuGroupDto;
 import com.herryboro.order66.dto.Option;
 import com.herryboro.order66.dto.StoreInfoDto;
+import com.herryboro.order66.exception.CustomGlobalExceptionHandler;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.mapper.StoreMapper;
@@ -69,7 +72,8 @@ public class StoreService {
         storeMapper.registerMenuGroupInfo(menuGroup);
     }
 
-    @Transactional
+    // (rollbackFor = JsonProcessingException.class)
+    @Transactional(rollbackFor = JsonProcessingException.class)
     public void registerMenu(MenuDto menuDto) {
         /*
             메뉴 등록
@@ -95,12 +99,14 @@ public class StoreService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         if (menuOptions != null && !menuOptions.trim().isEmpty()) {
+            // uncheck, check exception
             try {
                 List<Option> options = objectMapper.readValue(menuOptions, new TypeReference<List<Option>>() {});
                 storeMapper.registerMenuOptions(menuId, options);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (JsonProcessingException e) {
+                // check 예외를 -> uncheck 예외로 변환
+                // roll back을 적용받을 수 있도록
+                throw new RuntimeException("Json 파싱 에러");
             }
         }
     }

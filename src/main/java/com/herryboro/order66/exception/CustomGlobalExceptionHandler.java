@@ -1,5 +1,7 @@
 package com.herryboro.order66.exception;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,6 +14,13 @@ import java.util.Map;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler {
+
+    // check 예외를 -> uncheck 예외로 변환
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -21,6 +30,19 @@ public class CustomGlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        for (ConstraintViolation violation : ex.getConstraintViolations()) {
+            String fieldName = violation.getPropertyPath().toString();
+            String message = violation.getMessage();
+            errors.put(fieldName, message);
+        }
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }

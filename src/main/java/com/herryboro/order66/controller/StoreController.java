@@ -1,6 +1,5 @@
 package com.herryboro.order66.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.herryboro.order66.dto.MenuDto;
 import com.herryboro.order66.dto.MenuGroupDto;
 import com.herryboro.order66.dto.Option;
@@ -92,7 +91,7 @@ public class StoreController {
         return ResponseEntity.ok("메뉴 정보 수정되었습니다.");
     }
 
-    // 메뉴 순서(menu gropu, menu가 client단에서 보여지는 순서) 편집
+    // 메뉴 순서(menu gropup, menu가 client단에서 보여지는 순서) 편집
     @PutMapping("/updateOrdering")
     public ResponseEntity<String> updateOrdering(@RequestBody List<MenuGroupDto> orderInfo) {
         storeService.updateOrdering(orderInfo);

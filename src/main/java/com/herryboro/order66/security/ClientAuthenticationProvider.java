@@ -27,8 +27,8 @@ public class ClientAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-
         ClientInfoDTO client = clientService.getUserByClientId(username);
+
         if (client != null && passwordEncoder.matches(password, client.getClientPassword())) {
             List<GrantedAuthority> roles =  new ArrayList<>();
             roles.add(new SimpleGrantedAuthority("ROLE_CLIENT"));

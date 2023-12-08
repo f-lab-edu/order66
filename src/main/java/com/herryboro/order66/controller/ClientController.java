@@ -2,9 +2,8 @@ package com.herryboro.order66.controller;
 
 import com.herryboro.order66.dto.client.ClientInfoDTO;
 import com.herryboro.order66.dto.client.UpdateClientInfoDto;
-import com.herryboro.order66.exception.ErrorResponse;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
-import com.herryboro.order66.exception.exceptionutil.ErrorUtils;
+import com.herryboro.order66.exception.ErrorResponse;
 import com.herryboro.order66.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,11 +47,7 @@ public class ClientController {
      *  client 회원 가입
      */
     @PostMapping(value = "/signUp")
-    public ResponseEntity<String> signUpClientUser(@Valid @ModelAttribute ClientInfoDTO clientInfo, BindingResult result) {
-        if (result.hasErrors()) {
-            ErrorUtils.checkBindingResult(result);
-        }
-
+    public ResponseEntity<String> signUpClientUser(@Valid @ModelAttribute ClientInfoDTO clientInfo) {
         clientService.signUp(clientInfo, passwordEncoder);
         return ResponseEntity.ok("회원 가입이 완료되었습니다.");
     }
@@ -61,11 +55,8 @@ public class ClientController {
     /**
      *  client 유저 정보 수정
      */
-    @PutMapping(value = "/clients")
-    public ResponseEntity<String> updateClientInfo(@Valid @ModelAttribute UpdateClientInfoDto user, BindingResult result) {
-        if (result.hasErrors()) {
-            ErrorUtils.checkBindingResult(result);
-        }
+    @PutMapping(value = "/updateClientInfo")
+    public ResponseEntity<String> updateClientInfo(@Valid @ModelAttribute UpdateClientInfoDto user) {
         clientService.updateClientInfo(user, passwordEncoder);
         return ResponseEntity.ok("수정되었습니다.");
     }

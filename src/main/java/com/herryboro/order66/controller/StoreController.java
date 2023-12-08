@@ -1,9 +1,11 @@
 package com.herryboro.order66.controller;
 
-import com.herryboro.order66.dto.store.*;
+import com.herryboro.order66.dto.store.MenuDto;
+import com.herryboro.order66.dto.store.MenuGroupDto;
+import com.herryboro.order66.dto.store.Option;
+import com.herryboro.order66.dto.store.StoreInfoDto;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.ErrorResponse;
-import com.herryboro.order66.exception.exceptionutil.ErrorUtils;
 import com.herryboro.order66.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/store")
 @RequiredArgsConstructor
+@Validated
 public class StoreController {
 
     public final StoreService storeService;
@@ -47,11 +50,7 @@ public class StoreController {
      * store 정보 등록
      */
     @PostMapping(value = "/signUp")
-    public ResponseEntity<String> signUpStoreInfo(@Valid @ModelAttribute StoreInfoDto storeInfo, BindingResult result) {
-        if (result.hasErrors()) {
-            ErrorUtils.checkBindingResult(result);
-        }
-
+    public ResponseEntity<String> signUpStoreInfo(@Valid @ModelAttribute StoreInfoDto storeInfo) {
         storeService.signUp(storeInfo, passwordEncoder);
         return ResponseEntity.ok("회원 가입이 완료되었습니다.");
     }
@@ -59,7 +58,7 @@ public class StoreController {
     /*
         메뉴 그룹 추가
      */
-    @PostMapping(value = "/addMenuGroup")
+    @PostMapping(value = "/menuGroups")
     public ResponseEntity<String> addMenuGroup(@ModelAttribute MenuGroupDto menuGroup) {
         storeService.registerMenuGroup(menuGroup);
         return ResponseEntity.ok("메뉴 그룹 등록되었습니다.");
@@ -68,7 +67,7 @@ public class StoreController {
     /*
        메뉴 추가
     */
-    @PostMapping(value = "/addMenu")
+    @PostMapping(value = "/menus")
     public ResponseEntity<String> addMenu(@Valid @ModelAttribute MenuDto menu) {
         storeService.registerMenu(menu);
         return ResponseEntity.ok("메뉴 등록 되었습니다.");
@@ -79,25 +78,21 @@ public class StoreController {
     */
 
     // 메뉴 그룹 정보 수정
-    @PutMapping(value = "/updateMenuGroup")
-    public ResponseEntity<String> updateMenuGroup(@Valid @RequestBody MenuGroupList menuGrouplist) {
-        storeService.updateMenuGroupInfo(menuGrouplist.menuGroups);
+    @PutMapping(value = "/menuGroups")
+    public ResponseEntity<String> updateMenuGroup(@RequestBody List<@Valid MenuGroupDto> menuGrouplist) {
+        storeService.updateMenuGroupInfo(menuGrouplist);
         return ResponseEntity.ok("메뉴 그룹 정보가 수정되었습니다");
     }
 
     // 메뉴 정보 수정
-    @PutMapping(value = "/updateMenu")
-    public ResponseEntity<String> updateMenu(@Valid @ModelAttribute MenuDto menuDto, BindingResult result) {
-        if (result.hasErrors()) {
-            ErrorUtils.checkBindingResult(result);
-        }
-
+    @PutMapping(value = "/menus")
+    public ResponseEntity<String> updateMenu(@Valid @ModelAttribute MenuDto menuDto) {
         storeService.updateMenu(menuDto);
         return ResponseEntity.ok("메뉴 정보 수정되었습니다.");
     }
 
-    // 메뉴 순서(menu gropu, menu가 client단에서 보여지는 순서) 편집
-    @PutMapping("/updateOrdering")
+    // 메뉴 순서(menu gropup, menu가 client단에서 보여지는 순서) 편집
+    @PutMapping("/menuOrderings")
     public ResponseEntity<String> updateOrdering(@RequestBody List<MenuGroupDto> orderInfo) {
         storeService.updateOrdering(orderInfo);
         return ResponseEntity.ok("순서 수정되었습니다.");
@@ -108,23 +103,23 @@ public class StoreController {
     */
 
     // menu option 삭제
-    @DeleteMapping(value = "/deleteMenuOption")
-    public ResponseEntity<String> deleteMenuOption(@Valid @RequestBody Option option) {
-        String optionName = storeService.deleteMenuOption(option.getId());
+    @DeleteMapping(value = "/menuOptions/{id}")
+    public ResponseEntity<String> deleteMenuOption(@PathVariable Long id) {
+        String optionName = storeService.deleteMenuOption(id);
         return ResponseEntity.ok("옵션 " + optionName + "이 삭제되었습니다.");
     }
 
     // menu 삭제
-    @DeleteMapping(value = "/deleteMenu")
-    public ResponseEntity<String> deleteMenu(@RequestBody MenuDto menuDto) {
-        String menuName = storeService.deleteMenu(menuDto.getId());
+    @DeleteMapping(value = "/menus/{id}")
+    public ResponseEntity<String> deleteMenu(@PathVariable Long id) {
+        String menuName = storeService.deleteMenu(id);
         return ResponseEntity.ok("메뉴 " + menuName + "가 삭제되었습니다.");
     }
 
     // 메뉴 그룹 삭제
-    @DeleteMapping(value = "/deleteMenuGroup")
-    public ResponseEntity<String> deleteMenuGroup(@RequestBody MenuGroupDto menuGroupDto) {
-        String menuGroupName = storeService.deleteMenuGroup(menuGroupDto.getId());
+    @DeleteMapping(value = "/menuGroups/{id}")
+    public ResponseEntity<String> deleteMenuGroup(@PathVariable Long id) {
+        String menuGroupName = storeService.deleteMenuGroup(id);
         return ResponseEntity.ok("메뉴 그룹 " + menuGroupName + "가 삭제되었습니다.");
     }
 

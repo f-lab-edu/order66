@@ -1,6 +1,6 @@
 //package com.herryboro.order66.controller;
 //
-//import com.herryboro.order66.dto.ClientInfoDTO;
+//import com.herryboro.order66.dto.client.ClientInfoDTO;
 //import com.herryboro.order66.dto.JwtTokenDto;
 //import com.herryboro.order66.security.JwtFilter;
 //import com.herryboro.order66.security.TokenProvider;

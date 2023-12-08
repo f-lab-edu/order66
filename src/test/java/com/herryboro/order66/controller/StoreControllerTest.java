@@ -3,7 +3,7 @@ package com.herryboro.order66.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.herryboro.order66.dto.*;
+import com.herryboro.order66.dto.store.*;
 import com.herryboro.order66.service.StoreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

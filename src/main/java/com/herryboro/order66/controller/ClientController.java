@@ -1,11 +1,10 @@
 package com.herryboro.order66.controller;
 
-import com.herryboro.order66.dto.ClientInfoDTO;
-import com.herryboro.order66.dto.UpdateClientInfoDto;
+import com.herryboro.order66.dto.client.ClientInfoDTO;
+import com.herryboro.order66.dto.client.UpdateClientInfoDto;
 import com.herryboro.order66.exception.ErrorResponse;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.exceptionutil.ErrorUtils;
-import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +61,7 @@ public class ClientController {
     /**
      *  client 유저 정보 수정
      */
-    @PutMapping(value = "/updateClientInfo")
+    @PutMapping(value = "/clients")
     public ResponseEntity<String> updateClientInfo(@Valid @ModelAttribute UpdateClientInfoDto user, BindingResult result) {
         if (result.hasErrors()) {
             ErrorUtils.checkBindingResult(result);

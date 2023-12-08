@@ -1,11 +1,8 @@
 package com.herryboro.order66.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.herryboro.order66.dto.MenuDto;
-import com.herryboro.order66.dto.MenuGroupDto;
-import com.herryboro.order66.dto.Option;
-import com.herryboro.order66.dto.StoreInfoDto;
+import com.herryboro.order66.dto.store.MenuDto;
+import com.herryboro.order66.dto.store.MenuGroupDto;
+import com.herryboro.order66.dto.store.StoreInfoDto;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.mapper.StoreMapper;
@@ -18,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

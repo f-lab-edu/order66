@@ -1,4 +1,4 @@
-package com.herryboro.order66.dto;
+package com.herryboro.order66.dto.store;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,9 +1,8 @@
 package com.herryboro.order66.controller;
 
-import com.herryboro.order66.dto.*;
+import com.herryboro.order66.dto.store.*;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.ErrorResponse;
-import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.exception.exceptionutil.ErrorUtils;
 import com.herryboro.order66.service.StoreService;
 import jakarta.validation.Valid;

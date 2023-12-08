@@ -1,6 +1,6 @@
 package com.herryboro.order66.security;
 
-import com.herryboro.order66.dto.StoreInfoDto;
+import com.herryboro.order66.dto.store.StoreInfoDto;
 import com.herryboro.order66.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;

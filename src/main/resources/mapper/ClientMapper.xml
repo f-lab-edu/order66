@@ -3,7 +3,7 @@
 
 <mapper namespace="com.herryboro.order66.mapper.ClientMapper">
 
-    <resultMap id="clientResultMap" type="com.herryboro.order66.dto.ClientInfoDTO">
+    <resultMap id="clientResultMap" type="com.herryboro.order66.dto.client.ClientInfoDTO">
         <id property="id" column="id"/>
         <result property="clientId" column="client_id"/>
         <result property="clientName" column="client_name"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 회원가입 -->
-    <insert id="insertMember" parameterType="com.herryboro.order66.dto.ClientInfoDTO" >
+    <insert id="insertMember" parameterType="com.herryboro.order66.dto.client.ClientInfoDTO" >
         insert into client
             (client_id, client_name, client_nickname, client_password, client_email, client_phone, client_profile)
         values
@@ -32,7 +32,7 @@
         select * from client where client_id = #{clientId}
     </select>
 
-    <update id="updateClientInfo" parameterType="com.herryboro.order66.dto.UpdateClientInfoDto">
+    <update id="updateClientInfo" parameterType="com.herryboro.order66.dto.client.UpdateClientInfoDto">
         update client set
             client_nickname = #{clientNickname},
             client_password = #{clientPassword},

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.herryboro.order66.mapper.StoreMapper">
 
-    <resultMap id="storeResultMap" type="com.herryboro.order66.dto.StoreInfoDto">
+    <resultMap id="storeResultMap" type="com.herryboro.order66.dto.store.StoreInfoDto">
         <id property="id" column="id"/>
         <result property="storeId" column="store_id"/>
         <result property="ownerName" column="owner_name"/>
@@ -17,7 +17,7 @@
         <result property="storeProfile" column="store_profile"/>
     </resultMap>
 
-<!--    <resultMap id="MenuResultMap" type="com.herryboro.order66.dto.MenuDto">-->
+<!--    <resultMap id="MenuResultMap" type="com.herryboro.order66.dto.store.MenuDto">-->
 <!--        <id property="id" column="id"/>-->
 <!--        <result property="storeId" column="store_id"/>-->
 <!--        <result property="menuGroupId" column="client_name"/>-->

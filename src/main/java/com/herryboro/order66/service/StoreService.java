@@ -3,10 +3,11 @@ package com.herryboro.order66.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.herryboro.order66.dto.MenuDto;
-import com.herryboro.order66.dto.MenuGroupDto;
-import com.herryboro.order66.dto.Option;
-import com.herryboro.order66.dto.StoreInfoDto;
+
+import com.herryboro.order66.dto.store.MenuDto;
+import com.herryboro.order66.dto.store.MenuGroupDto;
+import com.herryboro.order66.dto.store.Option;
+import com.herryboro.order66.dto.store.StoreInfoDto;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.mapper.StoreMapper;
@@ -28,7 +29,7 @@ public class StoreService {
     /*
         점포 회원 가입
      */
-    public void signUp(StoreInfoDto storeInfoDto ,PasswordEncoder passwordEncoder) {
+    public void signUp(StoreInfoDto storeInfoDto , PasswordEncoder passwordEncoder) {
         if (!storeInfoDto.getStorePassword().equals(storeInfoDto.getStorePasswordCheck())) {
             throw new InvalidInputException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }

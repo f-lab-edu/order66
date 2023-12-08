@@ -1,9 +1,9 @@
 package com.herryboro.order66.mapper;
 
-import com.herryboro.order66.dto.MenuDto;
-import com.herryboro.order66.dto.MenuGroupDto;
-import com.herryboro.order66.dto.Option;
-import com.herryboro.order66.dto.StoreInfoDto;
+import com.herryboro.order66.dto.store.MenuDto;
+import com.herryboro.order66.dto.store.MenuGroupDto;
+import com.herryboro.order66.dto.store.Option;
+import com.herryboro.order66.dto.store.StoreInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

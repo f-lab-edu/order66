@@ -1,4 +1,4 @@
-package com.herryboro.order66.dto;
+package com.herryboro.order66.dto.store;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.herryboro.order66.service;
 
-import com.herryboro.order66.dto.ClientInfoDTO;
+import com.herryboro.order66.dto.client.ClientInfoDTO;
 import com.herryboro.order66.mapper.ClientMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;

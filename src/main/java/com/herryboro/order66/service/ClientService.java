@@ -1,7 +1,7 @@
 package com.herryboro.order66.service;
 
-import com.herryboro.order66.dto.ClientInfoDTO;
-import com.herryboro.order66.dto.UpdateClientInfoDto;
+import com.herryboro.order66.dto.client.ClientInfoDTO;
+import com.herryboro.order66.dto.client.UpdateClientInfoDto;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.mapper.ClientMapper;

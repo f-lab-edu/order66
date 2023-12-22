@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.herryboro.order66.mapper.CartMapper">
+
+    <select id="checkHaveCart" parameterType="Long" resultType="Cart">
+        select id, user_id as userId, store_id as storeId from cart where user_id = #{clientId};
+    </select>
+
+    <select id="insertCart" parameterType="Cart" resultType="Long">
+        insert into cart(user_id, store_id) values(#{clientId}, #{storeId})
+        returning id
+    </select>
+
+    <select id="insertCartItem" parameterType="Cart" resultType="Long">
+        insert into cart_item(cart_id, menu_id,	item_quantity) values(#{id}, #{menuId}, #{purchaseQuantity})
+        returning id
+    </select>
+
+    <insert id="insertCartItemOption" parameterType="Cart">
+        insert into cart_item_option(cartitem_id, option_id, menu_option_price)
+        values
+        <foreach collection="options" item="option" separator=",">
+            (#{cartItemId}, #{option.id}, #{option.price})
+        </foreach>
+    </insert>
+
+    <select id="checkCartItemWithoutOptions" resultType="CartItem">
+        select ci.id, ci.cart_id as cartId, ci.menu_id as menuId, ci.item_quantity as itemQuantity
+        from cart_item ci
+        where ci.menu_id = #{menuId}
+        and ci.cart_id = (
+            select c.id from cart c where c.user_id = #{clientId}
+        )
+        and not exists (
+            select cio.cartitem_id
+            from cart_item_option cio
+            where cio.cartitem_id = ci.id
+        )
+    </select>
+
+    <select id="checkCartItemWithOptions" resultType="CartItem">
+        select ci.id, ci.cart_id as cartId, ci.menu_id as menuId, ci.item_quantity as itemQuantity
+        from cart_item ci
+        join cart c on c.id = ci.cart_id
+        where ci.menu_id = #{cart.menuId}
+        and c.user_id = #{cart.clientId}
+        and ci.id in (
+            select cio.cartitem_id
+            from cart_item_option cio
+            group by cio.cartitem_id
+            having count(cio.option_id) = #{optionNums}
+            and count(cio.option_id) = (
+                select count(cio_inner.option_id)
+                from cart_item_option cio_inner
+                where cio_inner.cartitem_id = cio.cartitem_id
+                and cio_inner.option_id in
+                <foreach collection="cart.options" item="option" open="(" separator="," close=")">
+                    #{option.id}
+                </foreach>
+            )
+        )
+    </select>
+
+    <update id="updateCartItemQuantity">
+        update cart_item set item_quantity = #{totalItemQuantity} where id = #{cartItemId}
+    </update>
+</mapper>

@@ -1,4 +1,4 @@
-package com.herryboro.order66.dto.cart;
+package com.herryboro.order66.dto.order;
 
 import com.herryboro.order66.dto.store.Option;
 
@@ -14,7 +14,8 @@ public class Cart {
     Long storeId;
     Long clientId;
     Long menuId;
+    Long cartItemId;
     int purchaseQuantity;
-    int totalPrice;
     List<Option> options;
 }
+

@@ -1,7 +1,7 @@
 package com.herryboro.order66.controller;
 
-import com.herryboro.order66.dto.ClientInfoDTO;
-import com.herryboro.order66.dto.UpdateClientInfoDto;
+import com.herryboro.order66.dto.client.ClientInfoDTO;
+import com.herryboro.order66.dto.client.UpdateClientInfoDto;
 import com.herryboro.order66.service.ClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

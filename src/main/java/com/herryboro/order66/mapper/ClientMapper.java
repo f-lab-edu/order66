@@ -1,7 +1,7 @@
 package com.herryboro.order66.mapper;
 
-import com.herryboro.order66.dto.ClientInfoDTO;
-import com.herryboro.order66.dto.UpdateClientInfoDto;
+import com.herryboro.order66.dto.client.ClientInfoDTO;
+import com.herryboro.order66.dto.client.UpdateClientInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 
     @Mapper

@@ -133,35 +133,37 @@ public class StoreService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         if (menuOptions != null && !menuOptions.trim().isEmpty()) {
+            List<Option> options = null;
+
             try {
-                List<Option> options = objectMapper.readValue(menuOptions, new TypeReference<List<Option>>() {});
-
-                /* 메뉴 수정 버튼 클릭시 */
-
-                // 이미 존재하는 option을 담는 list
-                List<Option> updateOptionData = new ArrayList<>();
-
-                // 새로 추가된 data option을 담는 list
-                List<Option> registerOptionData = new ArrayList<>();
-
-                for (Option option : options) {
-                    if (option.getId() != null) {
-                        updateOptionData.add(option);
-                    } else {
-                        registerOptionData.add(option);
-                    }
-                }
-
-                // menu id가 있으면 -> 수정
-                if (updateOptionData.size() > 0) {
-                    storeMapper.updateMenuOptions(updateOptionData);
-                }
-                // menu id가 없으면 -> 새로운 메뉴 옵션이므로 추가 insert
-                if (registerOptionData.size() > 0) {
-                    storeMapper.registerMenuOptions(menuDto.getId(), registerOptionData);
-                }
+                 options = objectMapper.readValue(menuOptions, new TypeReference<List<Option>>() {});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Json 파싱 에러");
+            }
+
+            /* 메뉴 수정 버튼 클릭시 */
+
+            // 이미 존재하는 option을 담는 list
+            List<Option> existingOptions = new ArrayList<>();
+
+            // 새로 추가된 data option을 담는 list
+            List<Option> newOptions = new ArrayList<>();
+
+            for (Option option : options) {
+                if (option.getId() != null) {
+                    existingOptions.add(option);
+                } else {
+                    newOptions.add(option);
+                }
+            }
+
+            // menu id가 있으면 -> 수정
+            if (existingOptions.size() > 0) {
+                storeMapper.updateMenuOptions(existingOptions);
+            }
+            // menu id가 없으면 -> 새로운 메뉴 옵션이므로 추가 insert
+            if (newOptions.size() > 0) {
+                storeMapper.registerMenuOptions(menuDto.getId(), newOptions);
             }
         }
     }

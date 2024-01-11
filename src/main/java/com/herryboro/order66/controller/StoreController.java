@@ -2,7 +2,6 @@ package com.herryboro.order66.controller;
 
 import com.herryboro.order66.dto.store.MenuDto;
 import com.herryboro.order66.dto.store.MenuGroupDto;
-import com.herryboro.order66.dto.store.Option;
 import com.herryboro.order66.dto.store.StoreInfoDto;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.ErrorResponse;
@@ -49,10 +48,10 @@ public class StoreController {
     /*
      * store 정보 등록
      */
-    @PostMapping(value = "/signUp")
+    @PostMapping(value = "/stores")
     public ResponseEntity<String> signUpStoreInfo(@Valid @ModelAttribute StoreInfoDto storeInfo) {
         storeService.signUp(storeInfo, passwordEncoder);
-        return ResponseEntity.ok("회원 가입이 완료되었습니다.");
+        return ResponseEntity.ok("상점 등록이 성공적으로 추가되었습니다.");
     }
 
     /*

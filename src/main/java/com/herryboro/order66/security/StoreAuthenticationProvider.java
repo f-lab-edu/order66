@@ -1,6 +1,6 @@
 package com.herryboro.order66.security;
 
-import com.herryboro.order66.dto.StoreInfoDto;
+import com.herryboro.order66.dto.store.StoreInfoDto;
 import com.herryboro.order66.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,6 +29,7 @@ public class StoreAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         StoreInfoDto store = storeService.getStoreByStoreId(storeId);
+
         if (store != null && passwordEncoder.matches(password, store.getStorePassword())) {
             List<GrantedAuthority> roles = new ArrayList<>();
             roles.add(new SimpleGrantedAuthority("ROLE_STORE"));

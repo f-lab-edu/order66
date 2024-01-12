@@ -68,7 +68,9 @@
     </select>
 
     <select id="registerMenuInfo" parameterType="MenuDto" resultType="Long">
-        insert into menu(menu_group_id, menu_name, menu_price, menu_photo, menu_order) values(#{menuGroupId}, #{menuName}, #{menuPrice}, #{menuPhoto}, #{menuOrder})
+        insert into
+            menu(menu_group_id, menu_name, menu_price, menu_photo, menu_order)
+        values(#{menuGroupId}, #{menuName}, #{menuPrice}, #{menuPhoto}, #{menuOrder})
         returning id
     </select>
 
@@ -89,11 +91,12 @@
     </insert>
 
     <insert id="registerMenuOptions">
-        insert into menu_option(menu_id, option_name, option_price)
+        insert into
+            menu_option(menu_id, option_name, option_price)
         values
-        <foreach collection="options" item="option" separator=",">
-            (#{menuId}, #{option.optionName}, #{option.price})
-        </foreach>
+            <foreach collection="options" item="option" separator=",">
+                (#{menuId}, #{option.optionName}, #{option.price})
+            </foreach>
     </insert>
 
     <update id="updateMenu" parameterType="MenuDto">

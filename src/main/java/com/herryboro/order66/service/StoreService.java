@@ -1,11 +1,13 @@
 package com.herryboro.order66.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.herryboro.order66.dto.MenuDto;
-import com.herryboro.order66.dto.MenuGroupDto;
-import com.herryboro.order66.dto.Option;
-import com.herryboro.order66.dto.StoreInfoDto;
+
+import com.herryboro.order66.dto.store.MenuDto;
+import com.herryboro.order66.dto.store.MenuGroupDto;
+import com.herryboro.order66.dto.store.Option;
+import com.herryboro.order66.dto.store.StoreInfoDto;
 import com.herryboro.order66.exception.DuplicateRegistrationException;
 import com.herryboro.order66.exception.InvalidInputException;
 import com.herryboro.order66.mapper.StoreMapper;
@@ -24,7 +26,10 @@ public class StoreService {
 
     public final StoreMapper storeMapper;
 
-    public void signUp(StoreInfoDto storeInfoDto ,PasswordEncoder passwordEncoder) {
+    /*
+        점포 회원 가입
+     */
+    public void signUp(StoreInfoDto storeInfoDto , PasswordEncoder passwordEncoder) {
         if (!storeInfoDto.getStorePassword().equals(storeInfoDto.getStorePasswordCheck())) {
             throw new InvalidInputException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
@@ -69,7 +74,7 @@ public class StoreService {
         storeMapper.registerMenuGroupInfo(menuGroup);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = JsonProcessingException.class)
     public void registerMenu(MenuDto menuDto) {
         /*
             메뉴 등록
@@ -95,16 +100,22 @@ public class StoreService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         if (menuOptions != null && !menuOptions.trim().isEmpty()) {
+            // uncheck, check exception
             try {
                 List<Option> options = objectMapper.readValue(menuOptions, new TypeReference<List<Option>>() {});
                 storeMapper.registerMenuOptions(menuId, options);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (JsonProcessingException e) {
+                // check 예외를 -> uncheck 예외로 변환
+                // roll back을 적용받을 수 있도록
+                throw new RuntimeException("Json 파싱 에러");
             }
         }
     }
 
+    /*
+        storeId로 store 정보 가져오기
+         - Spring Security의 인증 과정, StoreAuthenticationProvider에서 사용
+     */
     public StoreInfoDto getStoreByStoreId(String storeId) {
         return storeMapper.getStoreByStoreId(storeId);
     }
@@ -112,6 +123,7 @@ public class StoreService {
     /*
         메뉴 정보 수정
      */
+    @Transactional(rollbackFor = JsonProcessingException.class)
     public void updateMenu(MenuDto menuDto) {
         // 메뉴 이름, 가격, 사진 정보 수정
         storeMapper.updateMenu(menuDto);
@@ -148,20 +160,29 @@ public class StoreService {
                 if (registerOptionData.size() > 0) {
                     storeMapper.registerMenuOptions(menuDto.getId(), registerOptionData);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Json 파싱 에러");
             }
         }
     }
 
+    /*
+        메뉴 그룹 수정
+     */
     public void updateMenuGroupInfo(List<MenuGroupDto> menuGroups) {
         storeMapper.updateMenuGroupInfo(menuGroups);
     }
 
+    /*
+        메뉴 옵션 삭제
+     */
     public String deleteMenuOption(Long id) {
         return storeMapper.deleteMenuOption(id);
     }
 
+    /*
+        메뉴 삭제
+     */
     public String deleteMenu(Long id) {
         boolean haveMenuOption = storeMapper.checkHaveMenuOption(id);
 
@@ -173,6 +194,9 @@ public class StoreService {
         return storeMapper.deleteMenu(id);
     }
 
+    /*
+        메뉴 그룹 삭제
+     */
     public String deleteMenuGroup(Long id) {
         boolean haveSubMenu = storeMapper.checkExistSubMenu(id);
 
@@ -184,6 +208,10 @@ public class StoreService {
         return storeMapper.deleteMenuGroup(id);
     }
 
+    /*
+        메뉴 그룹 순서 변경
+     */
+    @Transactional
     public void updateOrdering(List<MenuGroupDto> orderInfo) {
         // 메뉴 그룹 order update
         storeMapper.updateMenuGroupOrder(orderInfo);

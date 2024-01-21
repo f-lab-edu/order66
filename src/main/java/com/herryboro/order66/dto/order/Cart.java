@@ -10,12 +10,9 @@ import java.util.List;
 
 @Setter @Getter @ToString
 public class Cart {
-    Long id;
-    Long storeId;
-    Long clientId;
-    Long menuId;
-    Long cartItemId;
-    int purchaseQuantity;
-    List<Option> options;
+    private Long id;
+    private Long storeId;
+    private Long userId;
+    private CartItem items;
 }
 

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Setter @Getter
 public class Option {
     private Long id;
-    private Long menuId;
+//    private Long menuId;
     private String optionName;
     private int price;
 }

@@ -7,11 +7,11 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface CartMapper {
-    Cart checkHaveCart(Long clientId);
+    Cart getCartByUserId(Long clientId);
 
     Long insertCart(Cart cart);
 
-    Long insertCartItem(Cart cart);
+    void insertCartItem(Cart cart);
 
     void insertCartItemOption(Cart cart);
 
@@ -20,4 +20,6 @@ public interface CartMapper {
     CartItem checkCartItemWithOptions(@Param(value = "order") Cart cart, @Param(value = "optionNums") int optionNums);
 
     void updateCartItemQuantity(@Param(value = "cartItemId") Long cartItemId, @Param(value = "totalItemQuantity") int totalItemQuantity);
+
+    CartItem getCartItemByHash(@Param(value = "userId") Long userId, @Param(value = "optionHashcode") String optionHashcode);
 }
